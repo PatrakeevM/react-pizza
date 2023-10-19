@@ -1,4 +1,4 @@
-@import '../variables';
+@import "../variables";
 
 .header {
   border-bottom: 1px solid $gray-line;
@@ -8,6 +8,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    @media (max-width: 660px) {
+      flex-direction: column;
+    }
   }
 
   &__logo {
@@ -27,6 +31,44 @@
 
     p {
       color: #7b7b7b;
+    }
+
+    @media (max-width: 660px) {
+      margin-bottom: 20px;
+
+      h1 {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 460px) {
+      position: relative;
+      padding: 0 10px;
+
+      img {
+        position: absolute;
+        top: -5px;
+        width: 28px;
+        height: 28px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      p {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      h1 {
+        margin-left: 15px;
+      }
+
+      p {
+        font-size: 12px;
+      }
     }
   }
 }
