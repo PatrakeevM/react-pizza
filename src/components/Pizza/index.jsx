@@ -1,8 +1,21 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { setActiveSize, setActiveType } from "../../redux/slices/pizzaSlice";
 
 export default function Pizza({ title, price, imageUrl, sizes, types }) {
-  const [activeSize, setActiveSize] = React.useState(0);
-  const [activeType, setActiveType] = React.useState(0);
+  const dispatch = useDispatch();
+  const activeSize = useSelector((state) => state.pizza.activeSize);
+  const activeType = useSelector((state) => state.pizza.activeType);
+
+  const onChangeSize = (i) => {
+    dispatch(setActiveSize(i));
+  };
+  const onChangeType = (i) => {
+    dispatch(setActiveType(i));
+  };
+  // const [activeSize, setActiveSize] = React.useState(0);
+  // const [activeType, setActiveType] = React.useState(0);
 
   const typeNames = ["тонкое", "традиционное"];
 
@@ -16,7 +29,7 @@ export default function Pizza({ title, price, imageUrl, sizes, types }) {
             {types.map((type, i) => (
               <li
                 key={i}
-                onClick={() => setActiveType(i)}
+                onClick={() => onChangeType(i)}
                 className={activeType === i ? "active" : ""}
               >
                 {typeNames[type]}
@@ -27,7 +40,7 @@ export default function Pizza({ title, price, imageUrl, sizes, types }) {
             {sizes.map((size, i) => (
               <li
                 key={i}
-                onClick={() => setActiveSize(i)}
+                onClick={() => onChangeSize(i)}
                 className={activeSize === i ? "active" : ""}
               >
                 {size} см.
