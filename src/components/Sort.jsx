@@ -33,14 +33,28 @@ const sortList = [
 export default function Sort() {
   const dispatch = useDispatch();
   const sort = useSelector((state) => state.filter.sort);
+  const sortRef = React.useRef();
+
   const [openSort, setOpenSort] = React.useState(false);
+
   const activeSort = (obj) => {
     dispatch(setSort(obj));
     setOpenSort(false);
   };
 
+  React.useEffect(() => {
+    const clickOutside = (event) => {
+      if (!event.composedPath().includes(sortRef.current)) {
+        setOpenSort(false);
+      }
+    };
+    document.body.addEventListener("click", clickOutside);
+
+    return () => document.body.removeEventListener("click", clickOutside);
+  }, []);
+
   return (
-    <div className="sort">
+    <div ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"

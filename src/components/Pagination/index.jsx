@@ -18,7 +18,7 @@ export default function Pagination() {
       previousLabel="<"
       onPageChange={(e) => onChangePage(e.selected + 1)}
       pageRangeDisplayed={4}
-      pageCount={3} // Жёстко указываем кол-во страниц из-за тестового 'BackEnd'a' (MockAPI)
+      pageCount={3} // Жёстко указываем кол-во страниц из-за RESTAPI (MockAPI)
       renderOnZeroPageCount={null}
     />
   );
