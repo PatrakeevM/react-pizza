@@ -1,6 +1,5 @@
 import React from "react";
-import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
@@ -8,13 +7,17 @@ import Skeleton from "../components/Pizza/Skeleton";
 import Pizza from "../components/Pizza";
 import Pagination from "../components/Pagination";
 import { SearchContext } from "../App";
+import { fetchPizzas } from "../redux/slices/pizzasSlice";
 
 export default function Home() {
-  const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
+  const { categoryId, sort, currentPage } = useSelector(
+    (state) => state.filter
+  );
+  const { items, status } = useSelector((state) => state.pizzas);
+
+  const dispatch = useDispatch();
 
   const { searchValue } = React.useContext(SearchContext);
-  const [items, setItems] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
 
   const skeleton = [...new Array(8)].map((_, index) => (
     <Skeleton key={index} />
@@ -22,21 +25,27 @@ export default function Home() {
   const pizzas = items.map((obj) => <Pizza key={obj.id} {...obj} />);
 
   React.useEffect(() => {
-    setIsLoading(true);
-    const category = categoryId > 0 ? `category=${categoryId}` : "";
-    const sortBy = sort.sortProperty.replace("-", "");
-    const order = sort.sortProperty.includes("-") ? "asc" : "desc";
-    const search = searchValue ? `&search=${searchValue}` : "";
-    axios
-      .get(
-        `https://6527cdaf931d71583df169fa.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
-      )
-      .then((res) => {
-        setItems(res.data);
-        setIsLoading(false);
-      });
-    window.scrollTo(0, 0);
-  }, [categoryId, sort, searchValue, currentPage]);
+    const getPizzas = async () => {
+      const category = categoryId > 0 ? `category=${categoryId}` : "";
+      const sortBy = sort.sortProperty.replace("-", "");
+      const order = sort.sortProperty.includes("-") ? "asc" : "desc";
+      const search = searchValue ? `&search=${searchValue}` : "";
+
+      dispatch(
+        fetchPizzas({
+          category,
+          sortBy,
+          order,
+          search,
+          currentPage,
+        })
+      );
+
+      window.scrollTo(0, 0);
+    };
+    getPizzas();
+  }, [categoryId, sort, searchValue, currentPage, dispatch]);
+
   return (
     <>
       <div className="content__top">
@@ -44,7 +53,18 @@ export default function Home() {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">{isLoading ? skeleton : pizzas}</div>
+      {status === "error" ? (
+        <div className="content__error">
+          <h2>Произошла ошибка</h2>
+          <p>
+            К сожалению, что-то сломалось. Попробуйте повторить попытку позже.
+          </p>
+        </div>
+      ) : (
+        <div className="content__items">
+          {status === "loading" ? skeleton : pizzas}
+        </div>
+      )}
       <Pagination />
     </>
   );
