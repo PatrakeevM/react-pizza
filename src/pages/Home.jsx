@@ -6,7 +6,6 @@ import Sort from "../components/Sort";
 import Skeleton from "../components/Pizza/Skeleton";
 import Pizza from "../components/Pizza";
 import Pagination from "../components/Pagination";
-import { SearchContext } from "../App";
 import { fetchPizzas } from "../redux/slices/pizzasSlice";
 
 export default function Home() {
@@ -14,10 +13,9 @@ export default function Home() {
     (state) => state.filter
   );
   const { items, status } = useSelector((state) => state.pizzas);
+  const { searchValue } = useSelector((state) => state.filter);
 
   const dispatch = useDispatch();
-
-  const { searchValue } = React.useContext(SearchContext);
 
   const skeleton = [...new Array(8)].map((_, index) => (
     <Skeleton key={index} />
