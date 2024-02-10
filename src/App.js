@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import "./scss/app.scss";
@@ -7,14 +7,10 @@ import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
 
-export const SearchContext = createContext();
-
 function App() {
-  const [searchValue, setSearchValue] = React.useState("");
 
   return (
     <div className="App">
-      <SearchContext.Provider value={{ searchValue, setSearchValue }}>
         <div className="wrapper">
           <Header />
           <div className="content">
@@ -27,7 +23,6 @@ function App() {
             </div>
           </div>
         </div>
-      </SearchContext.Provider>
     </div>
   );
 }
